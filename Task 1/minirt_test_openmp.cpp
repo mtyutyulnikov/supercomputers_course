@@ -49,9 +49,9 @@ void initScene(Scene &scene) {
 }
 
 int main(int argc, char **argv) {
-    int viewPlaneResolutionX = (argc > 1 ? std::stoi(argv[1]) : 600);
-    int viewPlaneResolutionY = (argc > 2 ? std::stoi(argv[2]) : 600);
-    int numOfSamples = (argc > 3 ? std::stoi(argv[3]) : 1);    
+    int viewPlaneResolutionX = (argc > 1 ? std::stoi(argv[1]) : 2560);
+    int viewPlaneResolutionY = (argc > 2 ? std::stoi(argv[2]) : 1440);
+    int numOfSamples = (argc > 3 ? std::stoi(argv[3]) : 1);
     std::string sceneFile = (argc > 4 ? argv[4] : "");
 
     Scene scene;
@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
     Image image(viewPlaneResolutionX, viewPlaneResolutionY); // computed image
 
     double start = omp_get_wtime();
-    #pragma omp parallel for schedule(dynamic ) num_threads(2)
+    #pragma omp parallel for schedule(static, 1) num_threads(8)
     for(int x = 0; x < viewPlaneResolutionX; x++)
         for(int y = 0; y < viewPlaneResolutionY; y++) {
             const auto color = viewPlane.computePixel(scene, x, y, numOfSamples);
